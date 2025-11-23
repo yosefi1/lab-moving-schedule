@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Moving Schedule</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- App Config -->
+    <script src="config.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Firebase Config (create this file from firebase-config.js.example) -->
+    <script src="firebase-config.js" onerror="console.log('Firebase config not found - using localStorage')"></script>
+    <script src="firebase-init.js"></script>
+</head>
+<body>
+    <!-- Password Protection Modal -->
+    <div id="passwordModal" class="modal" style="display: block; z-index: 10000;">
+        <div class="modal-content" style="max-width: 400px;">
+            <h2 style="margin-bottom: 20px;">🔒 Password Required</h2>
+            <p style="margin-bottom: 15px; color: #666;">Enter the password to access the Lab Moving Schedule</p>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" id="passwordInput" required autofocus style="width: 100%; padding: 12px; font-size: 16px;">
+                </div>
+                <div id="passwordError" style="color: #dc3545; margin-bottom: 15px; display: none;">Incorrect password. Please try again.</div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Enter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="mainApp" style="display: none;">
+        <header>
+            <h1>🏢 Lab Moving Schedule</h1>
+            <p class="subtitle">Track your lab migration tasks and timeline</p>
+            <div id="syncStatus" style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">
+                <span id="syncIndicator">🔄 Connecting...</span>
+            </div>
+        </header>
+
+        <div class="controls">
+            <button id="addTaskBtn" class="btn btn-primary">+ Add New Task</button>
+            <button id="exportBtn" class="btn btn-secondary">Export to JSON</button>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-header">
+                <div class="task-info-header">Task Details</div>
+                <div class="weeks-header" id="weeksHeader">
+                    <!-- Weeks will be dynamically added here -->
+                </div>
+            </div>
+
+            <div id="tasksContainer" class="tasks-container">
+                <!-- Tasks will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Add New Task</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskName">Task Name *</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="dependencies">Dependencies</label>
+                    <textarea id="dependencies" rows="2" placeholder="e.g., Need Rigotek, One rack per 2 working days"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="finishBefore">Must Finish Before Week</label>
+                    <input type="number" id="finishBefore" min="14" max="28" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="startWeek">Start Week *</label>
+                    <input type="number" id="startWeek" min="14" max="28" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (weeks) *</label>
+                    <input type="number" id="duration" min="1" max="15" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskColor">Color</label>
+                    <input type="color" id="taskColor" value="#4A90E2">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn" style="display: none;">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
