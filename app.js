@@ -23,12 +23,20 @@
         e.preventDefault();
         const enteredPassword = passwordInput.value;
         
+        // Debug: check if config is loaded
+        if (!APP_CONFIG) {
+            console.error('APP_CONFIG not loaded!');
+            alert('Configuration not loaded. Please refresh the page.');
+            return;
+        }
+        
         if (enteredPassword === APP_CONFIG.password) {
             sessionStorage.setItem('labMovingAuth', 'true');
             passwordModal.style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
         } else {
             passwordError.style.display = 'block';
+            passwordError.textContent = `Incorrect password. Please try again. (Expected: ${APP_CONFIG.password || 'not set'})`;
             passwordInput.value = '';
             passwordInput.focus();
         }
