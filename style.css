@@ -42,7 +42,7 @@ header {
     height: auto;
     width: auto;
     object-fit: contain;
-    filter: brightness(0) invert(1); /* Make logo white to match header */
+    background: transparent;
 }
 
 .header-text {
