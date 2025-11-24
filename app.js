@@ -201,9 +201,13 @@ function loadTasks() {
         unsubscribeTasks = tasksRef.onSnapshot((snapshot) => {
             if (snapshot.exists) {
                 const data = snapshot.data();
-                tasks = (data.tasks || []).map(convertTaskToNewFormat);
+                const loadedTasks = (data.tasks || []).map(convertTaskToNewFormat);
+                if (loadedTasks.length > 0) {
+                    tasks = loadedTasks;
+                }
+                // If Firebase has no tasks, keep default tasks
             } else {
-                // First time - initialize with default tasks
+                // First time - initialize with default tasks if they exist
                 if (tasks.length > 0) {
                     tasksRef.set({ tasks });
                 }
@@ -216,9 +220,13 @@ function loadTasks() {
             // Fallback to localStorage
             const saved = localStorage.getItem('labMovingTasks');
             if (saved) {
-                tasks = JSON.parse(saved).map(convertTaskToNewFormat);
-                renderTasks();
+                const savedTasks = JSON.parse(saved).map(convertTaskToNewFormat);
+                if (savedTasks.length > 0) {
+                    tasks = savedTasks;
+                }
             }
+            // If no saved tasks, keep default tasks
+            renderTasks();
         });
     } catch (error) {
         console.error('Error loading Firebase:', error);
@@ -226,9 +234,13 @@ function loadTasks() {
         // Fallback to localStorage
         const saved = localStorage.getItem('labMovingTasks');
         if (saved) {
-            tasks = JSON.parse(saved).map(convertTaskToNewFormat);
-            renderTasks();
+            const savedTasks = JSON.parse(saved).map(convertTaskToNewFormat);
+            if (savedTasks.length > 0) {
+                tasks = savedTasks;
+            }
         }
+        // If no saved tasks, keep default tasks
+        renderTasks();
     }
 }
 
