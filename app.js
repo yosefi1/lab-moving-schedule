@@ -185,10 +185,11 @@ function loadTasks() {
         // Fallback to localStorage if Firebase not configured
         const saved = localStorage.getItem('labMovingTasks');
         if (saved) {
-            tasks = JSON.parse(saved);
+            const savedTasks = JSON.parse(saved);
             // Convert old format to new format
-            tasks = tasks.map(convertTaskToNewFormat);
+            tasks = savedTasks.map(convertTaskToNewFormat);
         }
+        // If no saved tasks, keep default tasks (they should already be in tasks array)
         renderTasks();
         updateSyncStatus(false);
         return;
