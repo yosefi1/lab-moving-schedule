@@ -87,7 +87,9 @@ header h1 {
 
 .timeline-container {
     overflow-x: auto;
+    overflow-y: visible;
     padding: 20px;
+    width: 100%;
 }
 
 .timeline-header {
@@ -112,6 +114,7 @@ header h1 {
     display: flex;
     gap: 2px;
     flex: 1;
+    min-width: max-content;
 }
 
 .week-label {
@@ -119,9 +122,13 @@ header h1 {
     text-align: center;
     font-weight: 600;
     color: #555;
-    padding: 5px;
+    padding: 8px 5px;
     background: #f0f0f0;
     border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .tasks-container {
@@ -187,6 +194,7 @@ header h1 {
     gap: 2px;
     flex: 1;
     position: relative;
+    min-width: max-content;
 }
 
 .week-cell {

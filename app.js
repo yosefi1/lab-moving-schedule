@@ -48,6 +48,32 @@ let startWeek = 14;
 let endWeek = 28;
 let weeks = [];
 
+// Calculate date for a given week number (ISO week - starts on Monday)
+// Week 14 of 2024 starts on April 1, 2024 (Monday)
+function getWeekStartDate(weekNumber, year = 2024) {
+    // Find January 4th of the year (always in week 1 of ISO week)
+    const jan4 = new Date(year, 0, 4);
+    const jan4Day = jan4.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Find the Monday of week 1 (go back to Monday)
+    const daysToMonday = jan4Day === 0 ? 6 : jan4Day - 1;
+    const week1Monday = new Date(year, 0, 4 - daysToMonday);
+    
+    // Calculate days to add for the specific week (week 1 = week1Monday, week 14 = 13 weeks later)
+    const daysToAdd = (weekNumber - 1) * 7;
+    const weekStart = new Date(week1Monday);
+    weekStart.setDate(week1Monday.getDate() + daysToAdd);
+    
+    return weekStart;
+}
+
+// Format date as DD/MM
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${day}/${month}`;
+}
+
 // Helper function to convert old format (startWeek + duration) to new format (selectedWeeks)
 function convertTaskToNewFormat(task) {
     if (task.selectedWeeks) {
@@ -162,9 +188,29 @@ function renderWeekHeaders() {
     const header = document.getElementById('weeksHeader');
     header.innerHTML = '';
     weeks.forEach(week => {
+        const weekNum = week === 'ww14 (LAB is ready)' ? 14 : parseInt(week);
+        const weekDate = getWeekStartDate(weekNum);
+        const dateStr = formatDate(weekDate);
+        
         const weekLabel = document.createElement('div');
         weekLabel.className = 'week-label';
-        weekLabel.textContent = week;
+        
+        // Create date element
+        const dateElement = document.createElement('div');
+        dateElement.className = 'week-date';
+        dateElement.textContent = dateStr;
+        dateElement.style.fontSize = '0.75em';
+        dateElement.style.color = '#888';
+        dateElement.style.marginBottom = '2px';
+        
+        // Create week number element
+        const weekElement = document.createElement('div');
+        weekElement.className = 'week-number';
+        weekElement.textContent = week;
+        weekElement.style.fontWeight = '600';
+        
+        weekLabel.appendChild(dateElement);
+        weekLabel.appendChild(weekElement);
         header.appendChild(weekLabel);
     });
 }
