@@ -175,7 +175,7 @@ let isFirebaseReady = false;
 function updateWeeks() {
     weeks = [];
     for (let i = startWeek; i <= endWeek; i++) {
-        weeks.push(i === 14 ? 'ww14 (LAB is ready)' : i);
+        weeks.push(i);
     }
     renderWeekHeaders();
     if (tasks && tasks.length > 0) {
@@ -188,7 +188,7 @@ function renderWeekHeaders() {
     const header = document.getElementById('weeksHeader');
     header.innerHTML = '';
     weeks.forEach(week => {
-        const weekNum = week === 'ww14 (LAB is ready)' ? 14 : parseInt(week);
+        const weekNum = parseInt(week);
         const weekDate = getWeekStartDate(weekNum);
         const dateStr = formatDate(weekDate);
         
@@ -206,7 +206,7 @@ function renderWeekHeaders() {
         // Create week number element
         const weekElement = document.createElement('div');
         weekElement.className = 'week-number';
-        weekElement.textContent = week;
+        weekElement.textContent = `ww${weekNum}`;
         weekElement.style.fontWeight = '600';
         
         weekLabel.appendChild(dateElement);
@@ -362,7 +362,7 @@ function renderTasks() {
         }
 
         weeks.forEach((week, index) => {
-            const weekNum = week === 'ww14 (LAB is ready)' ? 14 : parseInt(week);
+            const weekNum = parseInt(week);
             const weekCell = document.createElement('div');
             weekCell.className = 'week-cell';
             
