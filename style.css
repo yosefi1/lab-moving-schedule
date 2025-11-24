@@ -43,6 +43,7 @@ header {
     width: auto;
     object-fit: contain;
     background: transparent;
+    mix-blend-mode: multiply; /* Remove white background */
 }
 
 .header-text {
