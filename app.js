@@ -194,6 +194,7 @@ function renderWeekHeaders() {
         
         const weekLabel = document.createElement('div');
         weekLabel.className = 'week-label';
+        weekLabel.setAttribute('data-week', weekNum); // Add data attribute for hover matching
         
         // Create date element
         const dateElement = document.createElement('div');
@@ -365,6 +366,7 @@ function renderTasks() {
             const weekNum = parseInt(week);
             const weekCell = document.createElement('div');
             weekCell.className = 'week-cell';
+            weekCell.setAttribute('data-week', weekNum); // Add data attribute for hover matching
             
             // Check if this week is selected
             const isSelected = task.selectedWeeks.includes(weekNum);
@@ -374,6 +376,21 @@ function renderTasks() {
                 weekCell.style.backgroundColor = task.color;
                 weekCell.style.opacity = '0.8';
             }
+            
+            // Hover effect - highlight corresponding week header
+            weekCell.onmouseenter = () => {
+                const weekLabel = document.querySelector(`.week-label[data-week="${weekNum}"]`);
+                if (weekLabel) {
+                    weekLabel.classList.add('week-hover');
+                }
+            };
+            
+            weekCell.onmouseleave = () => {
+                const weekLabel = document.querySelector(`.week-label[data-week="${weekNum}"]`);
+                if (weekLabel) {
+                    weekLabel.classList.remove('week-hover');
+                }
+            };
             
             // Click to toggle week selection
             weekCell.onclick = () => {
