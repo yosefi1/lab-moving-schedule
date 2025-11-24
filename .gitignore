@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Firebase config - NOTE: We need this file for deployment!
+# If you want to keep it private, use environment variables in Netlify instead
+# firebase-config.js
+
