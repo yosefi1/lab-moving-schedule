@@ -101,7 +101,6 @@ header h1 {
     top: 0;
     background: white;
     z-index: 10;
-    min-width: max-content;
 }
 
 .task-info-header {
@@ -115,7 +114,6 @@ header h1 {
     display: flex;
     gap: 2px;
     flex: 1;
-    min-width: max-content;
 }
 
 .week-label {
@@ -146,7 +144,6 @@ header h1 {
     padding: 15px;
     transition: all 0.3s;
     border-left: 4px solid transparent;
-    min-width: max-content;
 }
 
 .task-row:hover {
@@ -196,7 +193,6 @@ header h1 {
     gap: 2px;
     flex: 1;
     position: relative;
-    min-width: max-content;
 }
 
 .week-cell {
