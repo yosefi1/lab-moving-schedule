@@ -48,18 +48,6 @@ let startWeek = 14;
 let endWeek = 28;
 let weeks = [];
 
-function updateWeeks() {
-    weeks = [];
-    for (let i = startWeek; i <= endWeek; i++) {
-        weeks.push(i === 14 ? 'ww14 (LAB is ready)' : i);
-    }
-    renderWeekHeaders();
-    renderTasks();
-}
-
-// Initialize weeks on load
-updateWeeks();
-
 // Helper function to convert old format (startWeek + duration) to new format (selectedWeeks)
 function convertTaskToNewFormat(task) {
     if (task.selectedWeeks) {
@@ -157,6 +145,17 @@ let tasks = [
 let currentEditingId = null;
 let unsubscribeTasks = null;
 let isFirebaseReady = false;
+
+function updateWeeks() {
+    weeks = [];
+    for (let i = startWeek; i <= endWeek; i++) {
+        weeks.push(i === 14 ? 'ww14 (LAB is ready)' : i);
+    }
+    renderWeekHeaders();
+    if (tasks && tasks.length > 0) {
+        renderTasks();
+    }
+}
 
 // Render week headers
 function renderWeekHeaders() {
