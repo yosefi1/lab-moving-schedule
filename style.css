@@ -118,16 +118,19 @@ header h1 {
 
 .week-label {
     min-width: 80px;
+    width: 80px;
+    height: 60px;
     text-align: center;
     font-weight: 600;
     color: #555;
-    padding: 8px 5px;
+    padding: 4px 5px;
     background: #f0f0f0;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .tasks-container {
@@ -197,6 +200,7 @@ header h1 {
 
 .week-cell {
     min-width: 80px;
+    width: 80px;
     height: 60px;
     background: #f8f9fa;
     border: 1px solid #e0e0e0;
@@ -204,6 +208,7 @@ header h1 {
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
+    box-sizing: border-box;
 }
 
 .week-cell:hover {
