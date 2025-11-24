@@ -6,6 +6,6 @@ const APP_CONFIG = {
     password: "lab2026",
     
     // Set to false to disable password protection
-    requirePassword: true
+    requirePassword: false
 };
 
