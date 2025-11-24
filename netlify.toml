@@ -1,8 +1,12 @@
 # Netlify configuration for static site
 [build]
   # No build command needed - this is a static site
-  command = ""
+  command = "echo 'No build needed'"
   publish = "."
+
+# Use Node.js 18 (latest stable)
+[build.environment]
+  NODE_VERSION = "18"
 
 # Redirect all routes to index.html (for SPA-like behavior)
 [[redirects]]
