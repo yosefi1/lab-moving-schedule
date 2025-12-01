@@ -49,20 +49,27 @@
 
         <div class="controls">
             <button id="addTaskBtn" class="btn btn-primary">+ Add New Task</button>
-            <button id="exportBtn" class="btn btn-secondary">Export to JSON</button>
+            <button id="exportBtn" class="btn btn-secondary">Export to Excel</button>
             <button id="settingsBtn" class="btn btn-secondary">⚙️ Settings</button>
+            <button id="planBtn" class="btn btn-secondary">📋 Plan</button>
         </div>
 
-        <div class="timeline-container">
-            <div class="timeline-header">
-                <div class="task-info-header">Task Details</div>
-                <div class="weeks-header" id="weeksHeader">
-                    <!-- Weeks will be dynamically added here -->
-                </div>
+        <div class="timeline-wrapper">
+            <div class="scroll-controls">
+                <button id="scrollLeftBtn" class="scroll-btn">◀</button>
+                <button id="scrollRightBtn" class="scroll-btn">▶</button>
             </div>
+            <div class="timeline-container" id="timelineContainer">
+                <div class="timeline-header">
+                    <div class="task-info-header">Task Details</div>
+                    <div class="weeks-header" id="weeksHeader">
+                        <!-- Weeks will be dynamically added here -->
+                    </div>
+                </div>
 
-            <div id="tasksContainer" class="tasks-container">
-                <!-- Tasks will be dynamically added here -->
+                <div id="tasksContainer" class="tasks-container">
+                    <!-- Tasks will be dynamically added here -->
+                </div>
             </div>
         </div>
     </div>
@@ -75,15 +82,59 @@
             <form id="settingsForm">
                 <div class="form-group">
                     <label for="startWeekRange">Start Week</label>
-                    <input type="number" id="startWeekRange" min="1" max="52" required>
+                    <input type="number" id="startWeekRange" min="1" max="52" value="27" required>
                 </div>
                 <div class="form-group">
                     <label for="endWeekRange">End Week</label>
-                    <input type="number" id="endWeekRange" min="1" max="52" required>
+                    <input type="number" id="endWeekRange" min="1" max="52" value="52" required>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="cancelSettingsBtn">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Plan Modal -->
+    <div id="planModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" id="closePlan">&times;</span>
+            <h2>📋 Plan</h2>
+            <div style="margin-top: 20px;">
+                <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <strong>Lab team deals with high end and unique equipment (Scope, BERT, AWG, etc ...)</strong>
+                </div>
+                <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #50C878;">
+                    <strong>Soldering technician ready on WW33</strong>
+                </div>
+                <div style="margin-top: 30px; padding: 15px; background: #fff3cd; border-radius: 8px;">
+                    <strong>14 weeks of transition and 9 weeks of PO preparations to transfer and enable the new lab</strong>
+                </div>
+            </div>
+            <div class="form-actions" style="margin-top: 20px;">
+                <button type="button" class="btn btn-primary" id="closePlanBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Edit Cell Modal -->
+    <div id="cellEditModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close" id="closeCellEdit">&times;</span>
+            <h2>Edit Week Cell</h2>
+            <form id="cellEditForm">
+                <div class="form-group">
+                    <label for="cellDependencies">Dependencies</label>
+                    <textarea id="cellDependencies" rows="3" placeholder="e.g., Need Rigotek, One rack per 2 working days"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cellFinishBefore">Task should finish before week</label>
+                    <input type="number" id="cellFinishBefore" min="27" max="52" placeholder="Optional">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCellEditBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -105,11 +156,11 @@
                 </div>
                 <div class="form-group">
                     <label for="finishBefore">Must Finish Before Week</label>
-                    <input type="number" id="finishBefore" min="14" max="28" placeholder="Optional">
+                    <input type="number" id="finishBefore" min="27" max="52" placeholder="Optional">
                 </div>
                 <div class="form-group">
                     <label for="startWeek">Start Week *</label>
-                    <input type="number" id="startWeek" min="14" max="28" required>
+                    <input type="number" id="startWeek" min="27" max="52" required>
                 </div>
                 <div class="form-group">
                     <label for="duration">Duration (weeks) *</label>

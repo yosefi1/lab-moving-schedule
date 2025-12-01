@@ -44,8 +44,8 @@
 })();
 
 // Initialize weeks - can be changed in settings
-let startWeek = 14;
-let endWeek = 28;
+let startWeek = 27;
+let endWeek = 52;
 let weeks = [];
 
 // Calculate date for a given week number (ISO week - starts on Monday)
@@ -76,86 +76,109 @@ function formatDate(date) {
 
 // Helper function to convert old format (startWeek + duration) to new format (selectedWeeks)
 function convertTaskToNewFormat(task) {
-    if (task.selectedWeeks) {
-        return task; // Already in new format
+    // If already in new format, return as is
+    if (task.selectedWeeks && Array.isArray(task.selectedWeeks)) {
+        // Ensure selectedWeeks is properly formatted - convert to numbers
+        task.selectedWeeks = task.selectedWeeks.map(w => {
+            const num = typeof w === 'string' ? parseInt(w) : w;
+            return typeof num === 'number' && !isNaN(num) ? num : null;
+        }).filter(w => w !== null);
+        return task;
     }
-    // Convert old format to new
-    const selectedWeeks = [];
-    for (let i = task.startWeek; i < task.startWeek + (task.duration || 1); i++) {
-        selectedWeeks.push(i);
+    
+    // Convert from old format (startWeek + duration) to new format (selectedWeeks array)
+    if (task.startWeek && task.duration) {
+        task.selectedWeeks = [];
+        for (let i = 0; i < task.duration; i++) {
+            task.selectedWeeks.push(task.startWeek + i);
+        }
+    } else if (task.startWeek) {
+        task.selectedWeeks = [task.startWeek];
+    } else {
+        task.selectedWeeks = [];
     }
-    return {
-        ...task,
-        selectedWeeks: selectedWeeks,
-        startWeek: task.startWeek, // Keep for backward compatibility
-        duration: task.duration
-    };
+    
+    // Ensure selectedWeeks is an array of numbers
+    if (!Array.isArray(task.selectedWeeks)) {
+        task.selectedWeeks = [];
+    } else {
+        task.selectedWeeks = task.selectedWeeks.map(w => {
+            const num = typeof w === 'string' ? parseInt(w) : w;
+            return typeof num === 'number' && !isNaN(num) ? num : null;
+        }).filter(w => w !== null);
+    }
+    
+    // Remove old format fields
+    delete task.startWeek;
+    delete task.duration;
+    
+    return task;
 }
 
-// Sample tasks based on your Excel
+// Tasks based on the Excel file - weeks updated according to the document
 let tasks = [
     {
         id: 1,
         name: 'LAB inspection (all IT ports, Electricity, Thermal tools, CDA, PCW)',
         dependencies: 'Dedicated inspection tools (IT, CDA, PCW)',
         finishBefore: null,
-        selectedWeeks: [14],
+        selectedWeeks: [27],
         color: '#4A90E2'
     },
     {
         id: 2,
         name: 'Storage transfer (Compactus + lab shelfs)',
         dependencies: '',
-        finishBefore: 3,
-        selectedWeeks: [15, 16],
+        finishBefore: null,
+        selectedWeeks: [27, 28],
         color: '#50C878'
     },
     {
         id: 3,
         name: 'SIPD Picoprobing transfer and calibration',
         dependencies: 'Need Rigotek',
-        finishBefore: 4,
-        selectedWeeks: [15],
+        finishBefore: null,
+        selectedWeeks: [28, 29, 30],
         color: '#FF6B6B'
     },
     {
         id: 4,
-        name: 'MATRIX + MiniMax + Soldering equipment movement and installation',
+        name: 'MATRIX + MiniMax + BETA + Soldering equipment movement and installation',
         dependencies: '',
         finishBefore: null,
-        selectedWeeks: [17],
+        selectedWeeks: [29, 30],
         color: '#FFD93D'
     },
     {
         id: 5,
         name: 'Racks 1-5 equipment movement and bring up',
-        dependencies: 'One rack per 2 working days',
-        finishBefore: 6,
-        selectedWeeks: [18, 19],
+        dependencies: 'One rack per 2 working days (need help of 3 more lab-oriented people to assist)',
+        finishBefore: null,
+        selectedWeeks: [30, 31],
         color: '#9B59B6'
     },
     {
         id: 6,
         name: 'Racks 6-10 equipment movement and bring up',
-        dependencies: 'One rack per 2 working days',
+        dependencies: 'One rack per 2 working days (need help of 3 more lab-oriented people to assist)',
         finishBefore: null,
-        selectedWeeks: [21, 22],
+        selectedWeeks: [32, 33],
         color: '#1ABC9C'
     },
     {
         id: 7,
-        name: 'Racks 11-15 equipment movement and bring up',
-        dependencies: 'One rack per 2 working days',
+        name: 'Racks 11-15 equipment movement and bring up (PO preparation)',
+        dependencies: 'One rack per 2 working days (need help of 3 more lab-oriented people to assist)',
         finishBefore: null,
-        selectedWeeks: [24, 25],
+        selectedWeeks: [34, 35],
         color: '#E67E22'
     },
     {
         id: 8,
-        name: 'Racks 15-20 equipment movement and bring up',
-        dependencies: 'One rack per 2 working days',
+        name: 'Racks 15-20 equipment movement and bring up (PO preparation)',
+        dependencies: 'One rack per 2 working days (need help of 3 more lab-oriented people to assist)',
         finishBefore: null,
-        selectedWeeks: [26, 27],
+        selectedWeeks: [36, 37],
         color: '#3498DB'
     },
     {
@@ -163,8 +186,32 @@ let tasks = [
         name: 'Validation tables + DEMO + Packaging enablement',
         dependencies: '',
         finishBefore: null,
-        selectedWeeks: [27, 28],
+        selectedWeeks: [28],
         color: '#E74C3C'
+    },
+    {
+        id: 10,
+        name: 'LAB is ready',
+        dependencies: '',
+        finishBefore: null,
+        selectedWeeks: [35],
+        color: '#90EE90'
+    },
+    {
+        id: 11,
+        name: 'PO BRKMPS readiness (Equipment, Calib, Setups)',
+        dependencies: 'One rack per 2 working days (need help of 3 more lab-oriented people to assist)',
+        finishBefore: null,
+        selectedWeeks: [36, 37, 38, 39],
+        color: '#FFA500'
+    },
+    {
+        id: 12,
+        name: 'BRKMPS execution',
+        dependencies: '',
+        finishBefore: null,
+        selectedWeeks: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52],
+        color: '#9370DB'
     }
 ].map(convertTaskToNewFormat);
 
@@ -187,6 +234,7 @@ function updateWeeks() {
 function renderWeekHeaders() {
     const header = document.getElementById('weeksHeader');
     header.innerHTML = '';
+    
     weeks.forEach(week => {
         const weekNum = parseInt(week);
         const weekDate = getWeekStartDate(weekNum);
@@ -194,7 +242,7 @@ function renderWeekHeaders() {
         
         const weekLabel = document.createElement('div');
         weekLabel.className = 'week-label';
-        weekLabel.setAttribute('data-week', weekNum); // Add data attribute for hover matching
+        weekLabel.setAttribute('data-week', weekNum);
         
         // Create date element
         const dateElement = document.createElement('div');
@@ -209,6 +257,7 @@ function renderWeekHeaders() {
         weekElement.className = 'week-number';
         weekElement.textContent = `ww${weekNum}`;
         weekElement.style.fontWeight = '600';
+        weekElement.style.color = '#555';
         
         weekLabel.appendChild(dateElement);
         weekLabel.appendChild(weekElement);
@@ -225,15 +274,25 @@ function updateSyncStatus(connected) {
     }
 }
 
-// Load tasks from Firebase (with real-time sync)
+// Load tasks from Firebase (with real-time sync) or localStorage
 function loadTasks() {
     if (!window.db) {
-        // Fallback to localStorage if Firebase not configured
+        // Working locally - use localStorage only
         const saved = localStorage.getItem('labMovingTasks');
         if (saved) {
             const savedTasks = JSON.parse(saved);
             // Convert old format to new format
             tasks = savedTasks.map(convertTaskToNewFormat);
+            // Ensure selectedWeeks are numbers
+            tasks = tasks.map(task => {
+                if (task.selectedWeeks && Array.isArray(task.selectedWeeks)) {
+                    task.selectedWeeks = task.selectedWeeks.map(w => {
+                        const num = typeof w === 'string' ? parseInt(w) : w;
+                        return typeof num === 'number' && !isNaN(num) ? num : null;
+                    }).filter(w => w !== null);
+                }
+                return task;
+            });
         }
         // If no saved tasks, keep default tasks (they should already be in tasks array)
         renderTasks();
@@ -250,7 +309,47 @@ function loadTasks() {
                 const data = snapshot.data();
                 const loadedTasks = (data.tasks || []).map(convertTaskToNewFormat);
                 if (loadedTasks.length > 0) {
-                    tasks = loadedTasks;
+                    // Ensure all tasks have selectedWeeks array
+                    const processedTasks = loadedTasks.map(task => {
+                        if (!task.selectedWeeks || !Array.isArray(task.selectedWeeks)) {
+                            task.selectedWeeks = [];
+                        }
+                        // Convert selectedWeeks to numbers
+                        task.selectedWeeks = task.selectedWeeks.map(w => {
+                            const num = typeof w === 'string' ? parseInt(w) : w;
+                            return typeof num === 'number' && !isNaN(num) ? num : null;
+                        }).filter(w => w !== null);
+                        return task;
+                    });
+                    
+                    // Check if data is outdated (old week range 14-28 instead of 27-52)
+                    // If any task has weeks < 27, it's old data - replace with defaults
+                    const hasOldData = processedTasks.some(task => 
+                        task.selectedWeeks && task.selectedWeeks.length > 0 && 
+                        Math.min(...task.selectedWeeks) < 27
+                    );
+                    
+                    if (hasOldData) {
+                        console.log('🔄 Detected old data format - updating to new schedule (weeks 27-52)');
+                        // Replace with default tasks (which have correct weeks 27-52)
+                        tasksRef.set({ tasks }).then(() => {
+                            console.log('✅ Updated Firebase with new schedule');
+                            renderTasks();
+                            updateSyncStatus(true);
+                        });
+                    } else {
+                        tasks = processedTasks;
+                        renderTasks();
+                        updateSyncStatus(true);
+                    }
+                } else {
+                    // If Firebase has empty tasks array, use default tasks
+                    if (tasks.length > 0) {
+                        // Save default tasks to Firebase
+                        tasksRef.set({ tasks });
+                    }
+                    renderTasks();
+                    updateSyncStatus(true);
                 }
                 // If Firebase has no tasks, keep default tasks
             } else {
@@ -258,9 +357,9 @@ function loadTasks() {
                 if (tasks.length > 0) {
                     tasksRef.set({ tasks });
                 }
+                renderTasks();
+                updateSyncStatus(true);
             }
-            renderTasks();
-            updateSyncStatus(true);
         }, (error) => {
             console.error('Firestore error:', error);
             updateSyncStatus(false);
@@ -291,11 +390,13 @@ function loadTasks() {
     }
 }
 
-// Save tasks to Firebase
+// Save tasks to Firebase or localStorage
 function saveTasks() {
+    // Always save to localStorage (for local work)
+    localStorage.setItem('labMovingTasks', JSON.stringify(tasks));
+    
+    // Only save to Firebase if connected
     if (!window.db) {
-        // Fallback to localStorage
-        localStorage.setItem('labMovingTasks', JSON.stringify(tasks));
         return;
     }
 
@@ -344,12 +445,7 @@ function renderTasks() {
             taskDetails.appendChild(dep);
         }
         
-        if (task.finishBefore) {
-            const finish = document.createElement('span');
-            finish.className = 'task-finish-before';
-            finish.textContent = `⏰ Finish before week ${task.finishBefore}`;
-            taskDetails.appendChild(finish);
-        }
+        // Don't show finishBefore in main view - it's editable via cell popup
 
         taskInfo.appendChild(taskName);
         taskInfo.appendChild(taskDetails);
@@ -369,12 +465,36 @@ function renderTasks() {
             weekCell.setAttribute('data-week', weekNum); // Add data attribute for hover matching
             
             // Check if this week is selected
-            const isSelected = task.selectedWeeks.includes(weekNum);
+            // Ensure selectedWeeks is an array
+            if (!task.selectedWeeks || !Array.isArray(task.selectedWeeks)) {
+                task.selectedWeeks = [];
+            }
+            
+            // Convert selectedWeeks to numbers if they're strings
+            const selectedWeeksNumbers = task.selectedWeeks.map(w => {
+                const num = typeof w === 'string' ? parseInt(w) : w;
+                return typeof num === 'number' && !isNaN(num) ? num : null;
+            }).filter(w => w !== null);
+            
+            const isSelected = selectedWeeksNumbers.includes(weekNum);
             
             if (isSelected) {
                 weekCell.classList.add('active');
                 weekCell.style.backgroundColor = task.color;
                 weekCell.style.opacity = '0.8';
+                // Add checkmark icon
+                const checkmark = document.createElement('div');
+                checkmark.innerHTML = '✓';
+                checkmark.style.position = 'absolute';
+                checkmark.style.top = '50%';
+                checkmark.style.left = '50%';
+                checkmark.style.transform = 'translate(-50%, -50%)';
+                checkmark.style.color = 'white';
+                checkmark.style.fontSize = '20px';
+                checkmark.style.fontWeight = 'bold';
+                checkmark.style.pointerEvents = 'none';
+                checkmark.style.zIndex = '1';
+                weekCell.appendChild(checkmark);
             }
             
             // Hover effect - highlight corresponding week header
@@ -404,7 +524,7 @@ function renderTasks() {
                     task.selectedWeeks.sort((a, b) => a - b); // Keep sorted
                 }
                 saveTasks();
-                renderTasks();
+                renderTasks(); // Re-render to update UI
             };
             
             taskTimeline.appendChild(weekCell);
@@ -429,6 +549,11 @@ addTaskBtn.onclick = () => {
     document.getElementById('modalTitle').textContent = 'Add New Task';
     taskForm.reset();
     document.getElementById('taskColor').value = '#4A90E2';
+    // Update min/max for week inputs
+    document.getElementById('startWeek').min = startWeek;
+    document.getElementById('startWeek').max = endWeek;
+    document.getElementById('finishBefore').min = startWeek;
+    document.getElementById('finishBefore').max = endWeek;
     deleteBtn.style.display = 'none';
     modal.style.display = 'block';
 };
@@ -454,16 +579,34 @@ function editTask(id) {
     document.getElementById('taskName').value = task.name;
     document.getElementById('dependencies').value = task.dependencies || '';
     document.getElementById('finishBefore').value = task.finishBefore || '';
+    
     // Calculate startWeek and duration from selectedWeeks for display
+    // Ensure selectedWeeks are numbers
     if (task.selectedWeeks && task.selectedWeeks.length > 0) {
-        const minWeek = Math.min(...task.selectedWeeks);
-        const maxWeek = Math.max(...task.selectedWeeks);
-        document.getElementById('startWeek').value = minWeek;
-        document.getElementById('duration').value = maxWeek - minWeek + 1;
+        const selectedWeeksNumbers = task.selectedWeeks.map(w => {
+            const num = typeof w === 'string' ? parseInt(w) : w;
+            return typeof num === 'number' && !isNaN(num) ? num : null;
+        }).filter(w => w !== null);
+        
+        if (selectedWeeksNumbers.length > 0) {
+            const minWeek = Math.min(...selectedWeeksNumbers);
+            const maxWeek = Math.max(...selectedWeeksNumbers);
+            document.getElementById('startWeek').value = minWeek;
+            document.getElementById('duration').value = maxWeek - minWeek + 1;
+        } else {
+            document.getElementById('startWeek').value = startWeek;
+            document.getElementById('duration').value = 1;
+        }
     } else {
         document.getElementById('startWeek').value = task.startWeek || startWeek;
         document.getElementById('duration').value = task.duration || 1;
     }
+    
+    // Update min/max for week inputs
+    document.getElementById('startWeek').min = startWeek;
+    document.getElementById('startWeek').max = endWeek;
+    document.getElementById('finishBefore').min = startWeek;
+    document.getElementById('finishBefore').max = endWeek;
     document.getElementById('taskColor').value = task.color;
     deleteBtn.style.display = 'inline-block';
     modal.style.display = 'block';
@@ -518,13 +661,25 @@ deleteBtn.onclick = () => {
 
 // Export function
 document.getElementById('exportBtn').onclick = () => {
-    const dataStr = JSON.stringify(tasks, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    // Export to Excel format (CSV)
+    let csv = 'Task Name,Dependencies,Finish Before Week,Selected Weeks,Color\n';
+    
+    tasks.forEach(task => {
+        const name = `"${(task.name || '').replace(/"/g, '""')}"`;
+        const dependencies = `"${(task.dependencies || '').replace(/"/g, '""')}"`;
+        const finishBefore = task.finishBefore || '';
+        const selectedWeeks = (task.selectedWeeks || []).join(';');
+        const color = task.color || '';
+        csv += `${name},${dependencies},${finishBefore},"${selectedWeeks}",${color}\n`;
+    });
+    
+    const dataBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'lab-moving-schedule.json';
+    link.download = 'lab-moving-tasks.csv';
     link.click();
+    URL.revokeObjectURL(url);
 };
 
 // Settings Modal
@@ -534,13 +689,19 @@ const settingsBtn = document.getElementById('settingsBtn');
 const closeSettings = document.getElementById('closeSettings');
 const cancelSettingsBtn = document.getElementById('cancelSettingsBtn');
 
+// Plan Modal
+const planModal = document.getElementById('planModal');
+const planBtn = document.getElementById('planBtn');
+const closePlan = document.getElementById('closePlan');
+const closePlanBtn = document.getElementById('closePlanBtn');
+
 // Load week range from storage
 function loadWeekRange() {
     const saved = localStorage.getItem('labMovingWeekRange');
     if (saved) {
         const range = JSON.parse(saved);
-        startWeek = range.startWeek || 14;
-        endWeek = range.endWeek || 28;
+        startWeek = range.startWeek || 27;
+        endWeek = range.endWeek || 52;
     }
     updateWeeks();
 }
@@ -567,6 +728,82 @@ cancelSettingsBtn.onclick = () => {
     settingsModal.style.display = 'none';
 };
 
+// Quick Edit Cell Modal
+let currentCellEditTaskId = null;
+let currentCellEditWeek = null;
+const cellEditModal = document.getElementById('cellEditModal');
+const cellEditForm = document.getElementById('cellEditForm');
+const closeCellEdit = document.getElementById('closeCellEdit');
+const cancelCellEditBtn = document.getElementById('cancelCellEditBtn');
+
+function openCellEditPopup(taskId, weekNum) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    currentCellEditTaskId = taskId;
+    currentCellEditWeek = weekNum;
+    
+    // Populate form with current values
+    document.getElementById('cellDependencies').value = task.dependencies || '';
+    document.getElementById('cellFinishBefore').value = task.finishBefore || '';
+    
+    cellEditModal.style.display = 'block';
+}
+
+if (closeCellEdit) {
+    closeCellEdit.onclick = () => {
+        cellEditModal.style.display = 'none';
+    };
+}
+
+if (cancelCellEditBtn) {
+    cancelCellEditBtn.onclick = () => {
+        cellEditModal.style.display = 'none';
+    };
+}
+
+if (cellEditForm) {
+    cellEditForm.onsubmit = (e) => {
+        e.preventDefault();
+        
+        const task = tasks.find(t => t.id === currentCellEditTaskId);
+        if (!task) return;
+        
+        // Update task
+        task.dependencies = document.getElementById('cellDependencies').value;
+        const finishBeforeValue = document.getElementById('cellFinishBefore').value;
+        task.finishBefore = finishBeforeValue ? parseInt(finishBeforeValue) : null;
+        
+        // Toggle week selection
+        const index = task.selectedWeeks.indexOf(currentCellEditWeek);
+        if (index > -1) {
+            // Week is selected - remove it
+            task.selectedWeeks.splice(index, 1);
+        } else {
+            // Week is not selected - add it
+            task.selectedWeeks.push(currentCellEditWeek);
+            task.selectedWeeks.sort((a, b) => a - b);
+        }
+        
+        saveTasks();
+        renderTasks();
+        cellEditModal.style.display = 'none';
+    };
+}
+
+// Plan Modal handlers
+planBtn.onclick = () => {
+    planModal.style.display = 'block';
+};
+
+closePlan.onclick = () => {
+    planModal.style.display = 'none';
+};
+
+closePlanBtn.onclick = () => {
+    planModal.style.display = 'none';
+};
+
 // Handle clicks outside modals
 window.addEventListener('click', (event) => {
     if (event.target === settingsModal) {
@@ -575,7 +812,28 @@ window.addEventListener('click', (event) => {
     if (event.target === modal) {
         modal.style.display = 'none';
     }
+    if (event.target === planModal) {
+        planModal.style.display = 'none';
+    }
+    if (event.target === cellEditModal) {
+        cellEditModal.style.display = 'none';
+    }
 });
+
+// Scroll controls
+const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+const scrollRightBtn = document.getElementById('scrollRightBtn');
+const timelineContainer = document.getElementById('timelineContainer');
+
+if (scrollLeftBtn && scrollRightBtn && timelineContainer) {
+    scrollLeftBtn.onclick = () => {
+        timelineContainer.scrollBy({ left: -200, behavior: 'smooth' });
+    };
+    
+    scrollRightBtn.onclick = () => {
+        timelineContainer.scrollBy({ left: 200, behavior: 'smooth' });
+    };
+}
 
 settingsForm.onsubmit = (e) => {
     e.preventDefault();
@@ -593,6 +851,7 @@ settingsForm.onsubmit = (e) => {
     updateWeeks();
     settingsModal.style.display = 'none';
 };
+
 
 // Initialize when Firebase is ready
 window.onFirebaseReady = (connected) => {

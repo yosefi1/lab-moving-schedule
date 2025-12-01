@@ -4,21 +4,32 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 0;
+    margin: 0;
     color: #333;
 }
 
 .container {
-    max-width: 1400px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 0;
+    box-shadow: none;
     overflow: hidden;
+    min-height: 100vh;
 }
 
 header {
@@ -111,11 +122,50 @@ header h1 {
     background: #c82333;
 }
 
+.timeline-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.scroll-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.scroll-btn:hover {
+    background: #5568d3;
+}
+
 .timeline-container {
     overflow-x: auto;
     overflow-y: visible;
     padding: 20px;
     width: 100%;
+    min-width: 100%;
+    background: white;
+}
+
+.tasks-container {
+    width: 100%;
+    min-width: max-content;
 }
 
 .timeline-header {
@@ -128,6 +178,7 @@ header h1 {
     background: white;
     z-index: 10;
     align-items: flex-end;
+    position: relative;
 }
 
 .task-info-header {
@@ -143,6 +194,23 @@ header h1 {
     display: flex;
     gap: 2px;
     flex: 1;
+    align-items: flex-end;
+    min-width: max-content;
+}
+
+.lab-ready-label {
+    background: #90EE90;
+    color: #2d5016;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 600;
+    white-space: nowrap;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
 }
 
 .week-label {
